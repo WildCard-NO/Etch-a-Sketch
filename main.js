@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
     for (let i = 0; i < gridSize * gridSize; i++) {
         const cell = document.createElement('div');
         cell.classList.add('cell');
+        
+        cell.addEventListener('mouseover', function() {
+            cell.style.backgroundColor = 'orange';
+        });
+
+
+
         gridContainer.appendChild(cell);
     }
 });
