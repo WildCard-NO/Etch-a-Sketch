@@ -12,11 +12,6 @@ body {
     border: 1px solid black;
 }
 
-/* .cell {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    width: 100%;
-    height: 100%;
-} */
 
 .withBorders .cell {
     border: 1px solid rgba(0, 0, 0, 0.7);
@@ -29,4 +24,19 @@ body {
     justify-content: center;
     gap: 40px;
     width: 100px;
+}
+
+.cell:hover {
+    background-color: orange;
+}
+
+
+.cell {
+    border: 1px solid rgba(0, 0, 0, 0.7);  /* Default border */
+    width: 100%;
+    height: 100%;
+}
+
+#gridContainer.withBorders .cell {
+    border: 1px solid transparent; /* Hide border when 'without-borders' class is present */
 }
