@@ -1,9 +1,23 @@
+const toggleBorders = document.getElementById('toggleBorders');
+const gridContainer = document.getElementById('gridContainer');
 const sizeValue = document.getElementById('sizeValue')
 const sizeSlider = document.getElementById('sizeSlider')
 
 
+toggleBorders.addEventListener('click', function() {
+    if (gridContainer.classList.contains('withBorders')) {
+        gridContainer.classList.remove('withBorders');
+    } else {
+        gridContainer.classList.add('withBorders');
+    }
+});
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
-    const gridContainer = document.getElementById('grid-container');
+    const gridContainer = document.getElementById('gridContainer');
 
     // Define grid size here
     const gridSize = 16; // Change this value for different grid sizes
