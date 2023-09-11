@@ -12,10 +12,6 @@ toggleBorders.addEventListener('click', function() {
     }
 });
 
-
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
     const gridContainer = document.getElementById('gridContainer');
 
@@ -35,11 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         cell.addEventListener('mouseover', function() {
             cell.style.backgroundColor = 'orange'; 
         });
-        
-        gridContainer.appendChild(cell);
-
-
-
         gridContainer.appendChild(cell);
     }
 });

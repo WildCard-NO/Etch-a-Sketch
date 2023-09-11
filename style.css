@@ -26,9 +26,6 @@ body {
     width: 100px;
 }
 
-.cell:hover {
-    background-color: orange;
-}
 
 
 .cell {
@@ -38,5 +35,5 @@ body {
 }
 
 #gridContainer.withBorders .cell {
-    border: 1px solid transparent; /* Hide border when 'without-borders' class is present */
+    border: 1px solid transparent; /* Hide border when 'withBorders' class is present */
 }
