@@ -1,11 +1,24 @@
     // grabbing references to various elements from the DOM
     const colorPicker = document.getElementById('colorPicker'); // Color input to pick the paining color
+    const darkeningButton = document.getElementById('darkening')
+    const randomizeButton = document.getElementById('randomize');
     const toggleBorders = document.getElementById('toggleBorders'); // button to toggle cell borders
     const gridContainer = document.getElementById('gridContainer'); // Container where the grid cells will be placed
     const sizeValue = document.getElementById('sizeValue'); // Display element for size value
     const sizeSlider = document.getElementById('sizeSlider'); // Slider input for grid size
 
     let isRandomColorMode = false;
+    let isDarkeningMode = false;
+
+    function darkenColor(color, percent) {
+        let [r,g,b] = color.match(/\d+/g).map(Number);
+        r = Math.floor(r *(1-percent / 100));
+        g = Math.floor(g *(1-percent / 100));
+        b = Math.floor(b *(1-percent / 100));
+        return `rgb(${r},${g},${b})`;
+    }
+
+
 
     function createGrid(gridSize) {
         //Clear previous grid
@@ -29,6 +42,9 @@
         cell.addEventListener('mouseover', function() {
             if(isRandomColorMode) {
                 cell.style.backgroundColor = getRandomColor();
+            } else if (isDarkeningMode) {
+                let currentColor = getComputedStyle(cell).backgroundColor;
+                cell.style.backgroundColor = darkenColor(currentColor, 10); // Darken by 10%
             } else {
                 cell.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--selected-color').trim();
             }
@@ -46,8 +62,6 @@ function getRandomColor() {
     return `rgb(${r},${g},${b})`;
 }
 
-const randomizeButton = document.getElementById('randomize');
-
 colorPicker.addEventListener('change', function(event) {
     isRandomColorMode = false;
     const selectedColor = event.target.value;
@@ -55,6 +69,7 @@ colorPicker.addEventListener('change', function(event) {
 });
 
 randomizeButton.addEventListener('click', function() {
+    isDarkeningMode = false;
     isRandomColorMode = true;
     randomizeButton.disabled = true;
     colorPicker.addEventListener('input', function() {
@@ -62,6 +77,18 @@ randomizeButton.addEventListener('click', function() {
         randomizeButton.disabled = false;
     });
 });
+
+darkeningButton.addEventListener('click', function() {
+    isRandomColorMode = false; //turn off Random color mode
+    isDarkeningMode = !isDarkeningMode; //Toggle darkening mode on/off
+
+    if (isDarkeningMode) {
+        darkeningButton.style.backgroundColor = "#aaa";
+    } else {
+        darkeningButton.style.backgroundColor = "";
+    }
+})
+
 
 sizeSlider.addEventListener('input', function() { // Use 'input' to reflect changes immediately
     // Update display grid size
