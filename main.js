@@ -12,13 +12,10 @@
 
 
     // Define grid size here
-    const cellSize = 50; // This Defines the size for each pixel
-    
-    // Setting the grid's CSS properties to format it properly based on gridSize and cellSize
-    gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`; // Set columns for the grid
-    gridContainer.style.gridTemplateRows = `repeat(${gridSize}, ${cellSize}px)`; // Set rows for the grid
-    gridContainer.style.width = `${gridSize * cellSize}px`; // Total width of the grid
-    gridContainer.style.height = `${gridSize * cellSize}px`; // Total height of the grid
+    const cellSize = gridContainer.offsetWidth / gridSize; // This Defines the size for each pixel
+
+    gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+    gridContainer.style.gridTemplateRows = `repeat (${gridSize} 1fr)`;
 
 
     // Create and setup each individual cell in the grid
