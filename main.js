@@ -5,6 +5,8 @@
     const sizeValue = document.getElementById('sizeValue'); // Display element for size value
     const sizeSlider = document.getElementById('sizeSlider'); // Slider input for grid size
 
+    let isRandomColorMode = false;
+
     function createGrid(gridSize) {
         //Clear previous grid
         gridContainer.innerHTML = '';
@@ -25,11 +27,41 @@
 
         // Add an event listener so that when you hover over the cell, it gets painted
         cell.addEventListener('mouseover', function() {
-            cell.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--selected-color').trim();
+            if(isRandomColorMode) {
+                cell.style.backgroundColor = getRandomColor();
+            } else {
+                cell.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--selected-color').trim();
+            }
     });
     gridContainer.appendChild(cell); // Add the cell to the grid container
     }
 }
+
+
+
+function getRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r},${g},${b})`;
+}
+
+const randomizeButton = document.getElementById('randomize');
+
+colorPicker.addEventListener('change', function(event) {
+    isRandomColorMode = false;
+    const selectedColor = event.target.value;
+    updateCellBackgroundColor(selectedColor);
+});
+
+randomizeButton.addEventListener('click', function() {
+    isRandomColorMode = true;
+    randomizeButton.disabled = true;
+    colorPicker.addEventListener('input', function() {
+        isRandomColorMode = false;
+        randomizeButton.disabled = false;
+    });
+});
 
 sizeSlider.addEventListener('input', function() { // Use 'input' to reflect changes immediately
     // Update display grid size
