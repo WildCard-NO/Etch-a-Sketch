@@ -1,13 +1,18 @@
     // grabbing references to various elements from the DOM
     const colorPicker = document.getElementById('colorPicker'); // Color input to pick the paining color
-    const darkeningButton = document.getElementById('darkening')
+    const colorInput =  document.getElementById('colorInput');
+    const recentColorsDiv = document.getElementById('recentColors');
+    const darkeningButton = document.getElementById('darkening');
+    const MAX_RECENT_COLORS = 5;
     const randomizeButton = document.getElementById('randomize');
     const toggleBorders = document.getElementById('toggleBorders'); // button to toggle cell borders
     const gridContainer = document.getElementById('gridContainer'); // Container where the grid cells will be placed
     const sizeValue = document.getElementById('sizeValue'); // Display element for size value
     const sizeSlider = document.getElementById('sizeSlider'); // Slider input for grid size
 
+
     let isRandomColorMode = false;
+    let recentColors = [];
     let isDarkeningMode = false;
 
     function darkenColor(color, percent) {
@@ -60,6 +65,61 @@ function getRandomColor() {
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
     return `rgb(${r},${g},${b})`;
+}
+
+
+colorInput.addEventListener('change', function(event) {
+    const colorName = event.target.value.trim().toLowerCase();
+
+    // Check if its a valid color
+    const isValidColor = (function(color) {
+        const s = new Option().style;
+        s.color = color;
+        return s.color !== '';
+    })(colorName);
+
+
+    if (isValidColor) {
+        updateCellBackgroundColor(colorName);
+
+        // If the color exist in the array, remove it
+        const colorIndex = recentColors.indexOf(colorName);
+        if (colorIndex !==-1) {
+            recentColors.splice(colorIndex, 1);
+        }
+
+        // Add the color to the beginning of the recent colors array
+        recentColors.unshift(colorName);
+
+        // If we have more than the max recent colors, remove the last one
+        if (recentColors.length > MAX_RECENT_COLORS) {
+            recentColors.pop();
+        }
+
+        // Update recent color display
+        updateRecentColorsDisplay();
+    } else {
+        alert('Invalid color name.');
+    }
+});
+
+function updateRecentColorsDisplay() {
+    recentColorsDiv.innerHTML = '';
+
+    recentColors.forEach(color => {
+        const colorDiv = document.createElement('div');
+        colorDiv.style.backgroundColor = color;
+        colorDiv.innerText = color;
+        colorDiv.addEventListener('click', function() {
+            colorInput.value = color;
+            updateCellBackgroundColor(color);
+        });
+        recentColorsDiv.appendChild(colorDiv);
+    });
+}
+
+function updateCellBackgroundColor(color)  {
+    document.documentElement.style.setProperty('--selected-color', color);
 }
 
 colorPicker.addEventListener('change', function(event) {
