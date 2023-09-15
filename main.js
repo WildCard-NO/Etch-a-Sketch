@@ -11,9 +11,23 @@
     const sizeSlider = document.getElementById('sizeSlider'); // Slider input for grid size
 
 
+    let isMouseDown = false;
     let isRandomColorMode = false;
     let recentColors = [];
     let isDarkeningMode = false;
+
+
+    document.addEventListener('mousedown', function(e) {
+        if (e.button === 0) { // Left mouse button
+            isMouseDown = true;
+        }
+    });
+    
+    document.addEventListener('mouseup', function() {
+        isMouseDown = false;
+    });
+    
+
 
     function darkenColor(color, percent) {
         let [r,g,b] = color.match(/\d+/g).map(Number);
@@ -23,6 +37,27 @@
         return `rgb(${r},${g},${b})`;
     }
 
+
+    gridContainer.addEventListener('mousedown', function(e) {
+        // Check if the left button is pressed
+        if (e.button === 0) {
+            isMouseDown = true;
+        }
+    });
+
+    gridContainer.addEventListener('mouseup', function() {
+        isMouseDown = false;
+    });
+
+    gridContainer.addEventListener('mouseleave', function() {
+        isMouseDown = false;
+    });
+
+    gridContainer.addEventListener('mouseenter', function(e) {
+        if (e.buttons === 1) { // checks if left mouse button is pressed while entering
+            isMouseDown = true;
+        }
+    });
 
 
     function createGrid(gridSize) {
@@ -44,17 +79,35 @@
         cell.classList.add('cell'); // Add the 'cell' class to style it
 
         // Add an event listener so that when you hover over the cell, it gets painted
-        cell.addEventListener('mouseover', function() {
-            if(isRandomColorMode) {
+        function paintCell() {
+            if (isRandomColorMode) {
                 cell.style.backgroundColor = getRandomColor();
             } else if (isDarkeningMode) {
                 let currentColor = getComputedStyle(cell).backgroundColor;
-                cell.style.backgroundColor = darkenColor(currentColor, 10); // Darken by 10%
+                cell.style.backgroundColor = darkenColor(currentColor, 10);
             } else {
                 cell.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--selected-color').trim();
             }
-    });
-    gridContainer.appendChild(cell); // Add the cell to the grid container
+        }
+
+        cell.addEventListener('mouseover', function() {
+            if (e.button === 0) { // Left mouse button
+                paintCell();
+            }
+        });
+
+        cell.addEventListener('mouseover', function() {
+            if (isMouseDown) { 
+                paintCell();
+            }
+        });
+
+        cell.addEventListener('mousedown', function(e) {
+            if (e.button == 0) {
+                paintCell();
+            }
+        })
+        gridContainer.appendChild(cell); // Add the cell to the grid container
     }
 }
 
