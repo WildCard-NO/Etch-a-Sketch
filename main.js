@@ -9,12 +9,18 @@
     const gridContainer = document.getElementById('gridContainer'); // Container where the grid cells will be placed
     const sizeValue = document.getElementById('sizeValue'); // Display element for size value
     const sizeSlider = document.getElementById('sizeSlider'); // Slider input for grid size
+    const eraseButton = document.getElementById('eraseButton'); // Erasing color
+    const clearButton = document.getElementById('clear');
+
+
+
 
 
     let isMouseDown = false;
     let isRandomColorMode = false;
     let recentColors = [];
     let isDarkeningMode = false;
+    let isErasingMode = false;
 
 
     document.addEventListener('mousedown', function(e) {
@@ -70,7 +76,7 @@
     const cellSize = gridContainer.offsetWidth / gridSize; // This Defines the size for each pixel
 
     gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
-    gridContainer.style.gridTemplateRows = `repeat (${gridSize} 1fr)`;
+    gridContainer.style.gridTemplateRows = `repeat(${gridSize} 1fr)`;
 
 
     // Create and setup each individual cell in the grid
@@ -80,7 +86,10 @@
 
         // Add an event listener so that when you hover over the cell, it gets painted
         function paintCell() {
-            if (isRandomColorMode) {
+            if (isErasingMode) {
+                cell.style.backgroundColor = '';
+            }
+            else if (isRandomColorMode) {
                 cell.style.backgroundColor = getRandomColor();
             } else if (isDarkeningMode) {
                 let currentColor = getComputedStyle(cell).backgroundColor;
@@ -89,12 +98,6 @@
                 cell.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--selected-color').trim();
             }
         }
-
-        cell.addEventListener('mouseover', function() {
-            if (e.button === 0) { // Left mouse button
-                paintCell();
-            }
-        });
 
         cell.addEventListener('mouseover', function() {
             if (isMouseDown) { 
@@ -233,6 +236,26 @@ colorPicker.addEventListener('change', function(event) {
     updateCellBackgroundColor(selectedColor);
     console.log(selectedColor);
 });
+
+
+eraseButton.addEventListener('click', function() {
+    isErasingMode = !isErasingMode // Toggle eraseing mode on/off
+
+    if (isErasingMode) {
+        eraseButton.style.backgroundColor = '#aaa'; // Change the button color to show erasing mode is on or off
+    } else {
+        eraseButton.style.backgroundColor = ''; // Reset the button color
+    }
+});
+
+clearButton.addEventListener('click', function() {
+
+    const cells = gridContainer.querySelectorAll('.cell');
+    cells.forEach(cell => {
+        cell.style.backgroundColor ='';
+    });
+});
+
 
 // Create the grid when the script runs
 createGrid(sizeSlider.value);
